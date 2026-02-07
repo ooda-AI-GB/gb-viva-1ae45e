@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+    <div class="card stat-card">
+        <h3>Active Projects</h3>
+        <p class="value">{{ active_projects }}</p>
+    </div>
+    <div class="card stat-card">
+        <h3>Hours (This Month)</h3>
+        <p class="value">{{ total_hours }}</p>
+    </div>
+    <div class="card stat-card">
+        <h3>Pending Invoices</h3>
+        <p class="value">{{ pending_invoices }}</p>
+    </div>
+    <div class="card stat-card">
+        <h3>Total Earned/Spent</h3>
+        <p class="value">${{ "{:,.2f}".format(total_earned) }}</p>
+    </div>
+</div>
+
+<div class="recent-activity">
+    <!-- Placeholder for simple recent activity or just instructions -->
+    <h2>Quick Actions</h2>
+    <div class="actions">
+        <a href="/projects" class="btn secondary">View Projects</a>
+        {% if user.role != 'client' %}
+        <a href="/time-logs" class="btn primary">Log Time</a>
+        <a href="/invoices" class="btn secondary">Manage Invoices</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

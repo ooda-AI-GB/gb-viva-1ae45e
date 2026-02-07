@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Time Logs{% endblock %}
+
+{% block content %}
+
+{% if user.role != 'client' %}
+<div class="card mb-2">
+    <h3>Add Entry</h3>
+    <form action="/time-logs" method="post" class="inline-form">
+        <div class="form-group">
+            <select name="project_id" required>
+                <option value="" disabled selected>Select Project</option>
+                {% for p in projects %}
+                <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="date" name="date" required value="{{ now }}">
+        </div>
+        <div class="form-group">
+            <input type="number" step="0.5" name="hours" placeholder="Hours" required style="width: 80px;">
+        </div>
+        <div class="form-group flex-grow">
+            <input type="text" name="description" placeholder="Description" required>
+        </div>
+        <button type="submit" class="btn primary">Add</button>
+    </form>
+</div>
+{% endif %}
+
+<div class="grid-2-1">
+    <div class="card">
+        <h3>Recent Entries</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Project</th>
+                    <th>Description</th>
+                    <th>Hours</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                <tr>
+                    <td>{{ entry.date }}</td>
+                    <td>{{ entry.project.name }}</td>
+                    <td>{{ entry.description }}</td>
+                    <td>{{ entry.hours }}h</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="empty-state">No time entries found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card h-fit">
+        <h3>Project Totals</h3>
+        <ul class="project-totals-list">
+            {% for pid, total in project_totals.items() %}
+                {% for p in entries if p.project.id == pid %}
+                    {% if loop.first %}
+                    <li class="total-item">
+                        <span>{{ p.project.name }}</span>
+                        <span class="badge">{{ total }}h</span>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <li class="empty-state">No data.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

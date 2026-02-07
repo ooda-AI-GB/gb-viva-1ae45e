@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+
+<div class="grid-2">
+    <!-- Hours per Project -->
+    <div class="card">
+        <h3>Hours per Project</h3>
+        {% if hours_data %}
+            {% set max_h = hours_data.values() | max %}
+            <div class="chart-container">
+                {% for name, hours in hours_data.items() %}
+                <div class="chart-row">
+                    <span class="label">{{ name }}</span>
+                    <div class="bar-wrapper">
+                        <div class="bar" style="width: {{ (hours / max_h * 100) }}%;"></div>
+                    </div>
+                    <span class="value">{{ hours }}h</span>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-state">No data available.</p>
+        {% endif %}
+    </div>
+
+    <!-- Monthly Earnings -->
+    <div class="card">
+        <h3>Monthly Earnings</h3>
+        {% if monthly_data %}
+            {% set max_m = monthly_data.values() | max %}
+            <div class="chart-container">
+                {% for month, amount in monthly_data.items() %}
+                <div class="chart-row">
+                    <span class="label">{{ month }}</span>
+                    <div class="bar-wrapper">
+                        <div class="bar green" style="width: {{ (amount / max_m * 100) }}%;"></div>
+                    </div>
+                    <span class="value">${{ "{:,.0f}".format(amount) }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-state">No earnings data.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% if user.role != 'client' %}
+<div class="card mt-2">
+    <h3>Top Clients by Revenue</h3>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Client Name</th>
+                <th>Total Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for name, total in top_clients %}
+            <tr>
+                <td>{{ name }}</td>
+                <td>${{ "{:,.2f}".format(total) }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="2" class="empty-state">No data found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% endblock %}

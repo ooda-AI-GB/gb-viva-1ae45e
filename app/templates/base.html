@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreelanceTracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h2>Tracker.</h2>
+            </div>
+            
+            <div class="user-profile">
+                <div class="avatar">{{ user.username[0] | upper }}</div>
+                <div class="info">
+                    <p class="name">{{ user.username | capitalize }}</p>
+                    <p class="role">{{ user.role | capitalize }}</p>
+                </div>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="/dashboard" class="{{ 'active' if request.url.path == '/dashboard' else '' }}">Dashboard</a></li>
+                <li><a href="/projects" class="{{ 'active' if request.url.path == '/projects' else '' }}">Projects</a></li>
+                <li><a href="/time-logs" class="{{ 'active' if request.url.path == '/time-logs' else '' }}">Time Logs</a></li>
+                <li><a href="/invoices" class="{{ 'active' if request.url.path == '/invoices' else '' }}">Invoices</a></li>
+                <li><a href="/reports" class="{{ 'active' if request.url.path == '/reports' else '' }}">Reports</a></li>
+            </ul>
+
+            <div class="logout">
+                <a href="/logout">Log Out</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h1>{% block title %}Dashboard{% endblock %}</h1>
+                <div class="date">{{ now }}</div>
+            </header>
+            
+            <div class="content">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+</body>
+</html>
